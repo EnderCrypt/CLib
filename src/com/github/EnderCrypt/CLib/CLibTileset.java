@@ -16,7 +16,6 @@ public class CLibTileset
 		{
 		this.tileNumber = tileNumber;
 		this.tileSize = tileSize;
-		//
 		BufferedImage tileset = ImageIO.read(file);
 		tiles = new BufferedImage[tileNumber.width*tileNumber.height];
 		int index = 0;
@@ -24,7 +23,6 @@ public class CLibTileset
 			{
 			for (int x=0;x<tileNumber.width;x++)
 				{
-				//System.out.println(x*tileSize.width+", "+y*tileSize.height);
 				BufferedImage tile = tileset.getSubimage(x*tileSize.width, y*tileSize.height, tileSize.width, tileSize.height);
 				tiles[index] = tile;
 				index++;
