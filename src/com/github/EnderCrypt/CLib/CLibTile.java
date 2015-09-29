@@ -23,6 +23,12 @@ public class CLibTile
 		this.tileset = tileset;
 		setTile(0);
 		}
+	public CLibTile(CLibTileset tileset, Color backgroundColor)
+		{
+		this.tileset = tileset;
+		this.backgroundColor = backgroundColor;
+		setTile(0);
+		}
 	public void setTile(int tile)
 		{
 		setTile(tileset.getTile(tile));
@@ -54,7 +60,6 @@ public class CLibTile
 		{
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(location.x, location.y, tileset.tileSize.width, tileset.tileSize.height);
-		//g2d.setColor(frontColor);
 		int markerRGB = new Color(0,0,0).getRGB() | 0xFF000000;
 		ImageFilter imageFilter = new RGBImageFilter()
 			{
@@ -65,8 +70,6 @@ public class CLibTile
 					{
 					return rgb;
 					}
-				//return 0x00FFFFFF & intFrontColor;
-				//return 0xFF000000 & intFrontColor;
 				return 0xFF000000 | intFrontColor;
 				}
 			};

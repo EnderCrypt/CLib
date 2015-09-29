@@ -11,11 +11,11 @@ public class Main
 	{
 	public static void main(String[] args)
 		{
-		CLib clib = new CLib("Test", new Dimension(10, 10));
+		CLib clib = new CLib("Test", new Dimension(100, 50));
 		File file = new File("src/com/github/EnderCrypt/CLib/curses_800x600.png");
 		try
 			{
-			clib.loadGraphics(file, new Dimension(16, 16), new Dimension(10, 12));
+			clib.loadGraphics(file, new Dimension(10, 12));
 			}
 		catch (IOException e)
 			{
@@ -23,22 +23,31 @@ public class Main
 			e.printStackTrace();
 			System.exit(1);
 			}
-		clib.start();
 		
 		clib.setFrontBrush(Color.RED);
-		clib.put(0, 0, '1');
-		clib.put(1, 0, '2');
-		clib.put(2, 0, '3');
+		clib.put(2, 20, "12345");
 		
-		clib.setFrontBrush(Color.GREEN);
-		clib.put(0, 1, 'a');
-		clib.put(1, 1, 'b');
-		clib.put(2, 1, 'c');
+		clib.setFrontBrush(new Color(255,0,255));
+		clib.put(2, 21, "abcde");
 		
 		clib.setFrontBrush(null);
-		clib.put(0, 2, 'A');
-		clib.put(1, 2, 'B');
-		clib.put(2, 2, 'C');
+		clib.put(2, 22, "ABCDE");
+		
+		clib.println("Testing! 123 lol");
 		clib.redraw();
+		
+		for(int i=0;i<10;i++)
+			{
+			try
+				{
+				Thread.sleep(1000);
+				}
+			catch (Exception e)
+				{
+				e.printStackTrace();
+				}
+			clib.println("Number: "+i);
+			clib.redraw();
+			}
 		}
 	}

@@ -12,11 +12,11 @@ public class CLibTileset
 	BufferedImage[] tiles;
 	Dimension tileNumber;
 	Dimension tileSize;
-	public CLibTileset(File file, Dimension tileNumber, Dimension tileSize) throws IOException
+	public CLibTileset(File file, Dimension tileSize) throws IOException
 		{
-		this.tileNumber = tileNumber;
 		this.tileSize = tileSize;
 		BufferedImage tileset = ImageIO.read(file);
+		tileNumber = new Dimension((int)(tileset.getWidth()/tileSize.width), (int)(tileset.getHeight()/tileSize.height));
 		tiles = new BufferedImage[tileNumber.width*tileNumber.height];
 		int index = 0;
 		for (int y=0;y<tileNumber.height;y++)
@@ -28,6 +28,10 @@ public class CLibTileset
 				index++;
 				}
 			}
+		}
+	public Dimension getTileDimension()
+		{
+		return tileNumber;
 		}
 	public BufferedImage getTile(int index)
 		{

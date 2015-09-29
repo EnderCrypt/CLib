@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class CLibPanel extends JPanel
 	{
-	private CLib clib;
+	CLib clib;
 	public CLibPanel(CLib clib)
 		{
 		this.clib = clib;
@@ -23,7 +23,7 @@ public class CLibPanel extends JPanel
 			{
 			for (int x=0;x<clib.tileNumber.width;x++)
 				{
-				CLibTile tile = clib.screen[x][y];
+				CLibTile tile = clib.screen[y][x];
 				Point location = new Point((x*clib.tileset.tileSize.width), (y*clib.tileset.tileSize.height));
 				tile.draw(g2d, location);
 				}

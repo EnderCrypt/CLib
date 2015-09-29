@@ -2,6 +2,8 @@ package com.github.EnderCrypt.CLib;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,6 +16,8 @@ public class CLib
 	CLibPanel clibPanel;
 	CLibTileset tileset;
 	CLibTile[][] screen;
+	final Color defaultFrontColorBrush = Color.WHITE;
+	final Color defaultBackColorBrush = Color.BLACK;
 	Color frontColorBrush;
 	Color backColorBrush;
 	public CLib(String title, Dimension tileNumber)
@@ -23,31 +27,47 @@ public class CLib
 		jframe = new JFrame(title);
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setResizable(false);
+		jframe.setBackground(defaultBackColorBrush);
 		// JPanel
 		clibPanel = new CLibPanel(this);
-		jframe.add(clibPanel);
+		jframe.getContentPane().add(clibPanel);
 		}
-	public void loadGraphics(File file, Dimension tileNumber, Dimension tileSize) throws IOException
+	public void loadGraphics(File file, Dimension tileSize) throws IOException
 		{
-		tileset = new CLibTileset(file, tileNumber, tileSize);
+		tileset = new CLibTileset(file, tileSize);
+		prepare();
 		}
-	public void start()
+	private void prepare()
 		{
 		createScreen();
-		jframe.setSize((tileset.tileSize.width*tileNumber.width),(tileset.tileSize.height*tileNumber.height));
-		jframe.setVisible(true);
+		resize();
 		redraw();
+		jframe.setVisible(true);
+		}
+	private void resize()
+		{
+		int width = (tileset.tileSize.width*tileNumber.width);
+		int height = (tileset.tileSize.height*tileNumber.height);
+		clibPanel.setPreferredSize(new Dimension(width,height));
+		jframe.pack();
 		}
 	private void createScreen()
 		{
-		screen = new CLibTile[tileNumber.width][tileNumber.height];
+		screen = new CLibTile[tileNumber.height][tileNumber.width];
 		for (int y=0;y<tileNumber.height;y++)
 			{
 			for (int x=0;x<tileNumber.width;x++)
 				{
-				screen[x][y] = new CLibTile(tileset);
+				screen[y][x] = new CLibTile(tileset);
 				}
 			}
+		}
+	public void clearScreen(Color backgroundColor)
+		{
+		Color origColor = backColorBrush;
+		setBackBrush(backgroundColor);
+		clearScreen();
+		setBackBrush(origColor);
 		}
 	public void clearScreen()
 		{
@@ -63,7 +83,7 @@ public class CLib
 		{
 		if (color == null)
 			{
-			color = Color.WHITE;
+			color = defaultFrontColorBrush;
 			}
 		frontColorBrush = color;
 		}
@@ -71,13 +91,13 @@ public class CLib
 		{
 		if (color == null)
 			{
-			color = Color.BLACK;
+			color = defaultBackColorBrush;
 			}
 		backColorBrush = color;
 		}
 	public void put(int x, int y, int tileID)
 		{
-		CLibTile tile = screen[x][y];
+		CLibTile tile = screen[y][x];
 		tile.setTile(tileID);
 		if (frontColorBrush != null)
 			{
@@ -88,8 +108,43 @@ public class CLib
 			tile.setBackground(backColorBrush);
 			}
 		}
+	public void put(int x, int y, String text)
+		{
+		for (int i=0;i<text.length();i++)
+			{
+			if (((x+i) >= tileNumber.width))
+				{
+				return;
+				}
+			put(x+i, y, text.charAt(i));
+			}
+		}
+	public void println(String text)
+		{
+		//shift
+		for (int y=0;y<tileNumber.height-1;y++)
+			{
+			screen[y] = screen[y+1];
+			}
+		screen[tileNumber.height-1] = new CLibTile[tileNumber.width];
+		for (int x=0;x<tileNumber.width;x++)
+			{
+			screen[tileNumber.height-1][x] = new CLibTile(tileset);
+			}
+		//println
+		put(0, tileNumber.height-1, text);
+		}
 	public void redraw()
 		{
 		jframe.repaint();
+		}
+	// listeners
+	public void addKeyListener(KeyListener keyListener)
+		{
+		jframe.addKeyListener(keyListener);
+		}
+	public void addMouseListener(MouseListener mouseListener)
+		{
+		jframe.addMouseListener(mouseListener);
 		}
 	}
