@@ -1,5 +1,6 @@
 package com.github.EnderCrypt.CLib;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ public class CLib
 	CLibPanel clibPanel;
 	CLibTileset tileset;
 	CLibTile[][] screen;
+	Color frontColorBrush;
+	Color backColorBrush;
 	public CLib(String title, Dimension tileNumber)
 		{
 		this.tileNumber = tileNumber;
@@ -56,9 +59,34 @@ public class CLib
 				}
 			}
 		}
-	public void put(int x, int y, int tile)
+	public void setFrontBrush(Color color)
 		{
-		screen[x][y].setTile(tile);
+		if (color == null)
+			{
+			color = Color.WHITE;
+			}
+		frontColorBrush = color;
+		}
+	public void setBackBrush(Color color)
+		{
+		if (color == null)
+			{
+			color = Color.BLACK;
+			}
+		backColorBrush = color;
+		}
+	public void put(int x, int y, int tileID)
+		{
+		CLibTile tile = screen[x][y];
+		tile.setTile(tileID);
+		if (frontColorBrush != null)
+			{
+			tile.setColor(frontColorBrush);
+			}
+		if (backColorBrush != null)
+			{
+			tile.setBackground(backColorBrush);
+			}
 		}
 	public void redraw()
 		{
