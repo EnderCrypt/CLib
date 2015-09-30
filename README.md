@@ -8,3 +8,7 @@ Features:
 - custom tile support
 - native keylistener
 - native mouse listener
+
+Todo/Missing:
+- slow
+- unfinished
