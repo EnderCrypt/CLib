@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -56,6 +57,7 @@ public class CLib
 		resize();
 		redraw();
 		jframe.setVisible(true);
+		clibPanel.requestFocus();
 		}
 	public void preloadTileset(Color color)
 		{
@@ -103,6 +105,25 @@ public class CLib
 				put(x, y, 0);
 				}
 			}
+		}
+	public int getCacheCount()
+		{
+		int count = 0;
+		for (Image[] images:tileset.cache.values())
+			{
+			for (Image image:images)
+				{
+				if (!(image == null))
+					{
+					count++;
+					}
+				}
+			}
+		return count;
+		}
+	public int getPaintDelta()
+		{
+		return clibPanel.paintMilli;
 		}
 	public void setFrontBrush(Color color)
 		{
@@ -229,13 +250,17 @@ public class CLib
 		{
 		jframe.repaint();
 		}
-	// listeners
+	// listeners	
+	public List<Integer> getKeysDebug()
+		{
+		return clibPanel.cLibListener.keysPressed;
+		}
 	public void addKeyListener(KeyListener keyListener)
 		{
-		jframe.addKeyListener(keyListener);
+		clibPanel.cLibListener.add(keyListener);
 		}
 	public void addMouseListener(MouseListener mouseListener)
 		{
-		jframe.addMouseListener(mouseListener);
+		clibPanel.cLibListener.add(mouseListener);
 		}
 	}
