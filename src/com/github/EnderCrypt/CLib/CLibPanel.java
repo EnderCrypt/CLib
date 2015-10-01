@@ -18,6 +18,7 @@ public class CLibPanel extends JPanel
 	protected void paintComponent(Graphics g)
 		{
 		super.paintComponent(g);
+		//long milli = System.currentTimeMillis();
 		Graphics2D g2d = (Graphics2D) g;
 		for (int y=0;y<clib.tileNumber.height;y++)
 			{
@@ -28,5 +29,6 @@ public class CLibPanel extends JPanel
 				tile.draw(g2d, location);
 				}
 			}
+		//System.out.println("Paint took: "+(System.currentTimeMillis()-milli)+" Milli");
 		}
 	}

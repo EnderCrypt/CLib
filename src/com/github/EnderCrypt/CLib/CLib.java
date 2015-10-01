@@ -44,6 +44,18 @@ public class CLib
 		redraw();
 		jframe.setVisible(true);
 		}
+	public void preloadTileset(Color color)
+		{
+		for (int i=0;i<tileset.tiles.length;i++)
+			{
+			preloadTile(i, color);
+			}
+		}
+	public void preloadTile(int index, Color color)
+		{
+		//TODO: improve efficiency
+		tileset.getTile(index, color);
+		}
 	private void resize()
 		{
 		int width = (tileset.tileSize.width*tileNumber.width);
@@ -110,13 +122,33 @@ public class CLib
 		}
 	public void put(int x, int y, String text)
 		{
+		put(x, y, text, false);
+		}
+	private void put(int x, int y, String text, boolean pushUpAllowed)
+		{
+		int draw_x = x;
+		int draw_y = y;
 		for (int i=0;i<text.length();i++)
 			{
-			if (((x+i) >= tileNumber.width))
+			char letter = text.charAt(i);
+			if (letter == '\n')
 				{
-				return;
+				draw_x = x;
+				draw_y++;
+				if (draw_y >= tileNumber.height)
+					{
+					println(text.substring(i+1));
+					return;
+					}
 				}
-			put(x+i, y, text.charAt(i));
+			else 
+				{
+				if (draw_x < tileNumber.width)
+					{
+					put(draw_x, draw_y, letter);
+					draw_x++;
+					}
+				}
 			}
 		}
 	public void println(String text)
@@ -132,7 +164,7 @@ public class CLib
 			screen[tileNumber.height-1][x] = new CLibTile(tileset);
 			}
 		//println
-		put(0, tileNumber.height-1, text);
+		put(0, tileNumber.height-1, text, true);
 		}
 	public void redraw()
 		{
