@@ -15,6 +15,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import com.github.EnderCrypt.CLib.event.CLibKeylistener;
+
 public class CLib
 	{
 	JFrame jframe;
@@ -108,18 +110,7 @@ public class CLib
 		}
 	public int getCacheCount()
 		{
-		int count = 0;
-		for (Image[] images:tileset.cache.values())
-			{
-			for (Image image:images)
-				{
-				if (!(image == null))
-					{
-					count++;
-					}
-				}
-			}
-		return count;
+		return tileset.cacheCount;
 		}
 	public int getPaintDelta()
 		{
@@ -255,7 +246,7 @@ public class CLib
 		{
 		return clibPanel.cLibListener.keysPressed;
 		}
-	public void addKeyListener(KeyListener keyListener)
+	public void addKeyListener(CLibKeylistener keyListener)
 		{
 		clibPanel.cLibListener.add(keyListener);
 		}

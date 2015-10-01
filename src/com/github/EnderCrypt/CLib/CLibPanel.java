@@ -18,7 +18,7 @@ public class CLibPanel extends JPanel
 		{
 		this.clib = clib;
 		addKeyListener(cLibListener);
-		//addMouseListener(cLibListener);
+		addMouseListener(cLibListener);
 		}
 	@Override
 	protected void paintComponent(Graphics g)

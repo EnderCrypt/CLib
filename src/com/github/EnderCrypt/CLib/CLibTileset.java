@@ -17,6 +17,8 @@ public class CLibTileset
 	Dimension tileNumber;
 	Dimension tileSize;
 	HashMap<Color, Image[]> cache = new HashMap<>();
+	int cacheCount = 0;
+	int cacheLimit = 25000;
 	public CLibTileset(BufferedImage tileset, Dimension tileSize)
 		{
 		this.tileSize = tileSize;
@@ -67,6 +69,15 @@ public class CLibTileset
 		ImageProducer ip = new FilteredImageSource(tiles[index].getSource(), imageFilter);
 		return Toolkit.getDefaultToolkit().createImage(ip);
 		}
+	public void checkCacheLimit()
+		{
+		if (cacheCount > cacheLimit)
+			{
+			System.out.println("Warning: CLib cache limit reached! ("+cacheLimit+") cache reset!");
+			cache = new HashMap<>();
+			cacheCount = 0;
+			}
+		}
 	public Image getTile(int index, Color color)
 		{
 		Image[] tileset_ref = null;
@@ -91,6 +102,8 @@ public class CLibTileset
 			tile_ref = createTile(index, color);
 			}
 		tileset_ref[index] = tile_ref;
+		cacheCount++;
+		checkCacheLimit();
 		return tile_ref;
 		}
 	}

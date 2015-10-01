@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.sound.midi.Instrument;
 
 import com.github.EnderCrypt.CLib.CLib;
 
