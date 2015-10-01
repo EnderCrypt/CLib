@@ -9,11 +9,7 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
 
 public class CLibTileset
 	{
@@ -21,10 +17,9 @@ public class CLibTileset
 	Dimension tileNumber;
 	Dimension tileSize;
 	HashMap<Color, Image[]> cache = new HashMap<>();
-	public CLibTileset(File file, Dimension tileSize) throws IOException
+	public CLibTileset(BufferedImage tileset, Dimension tileSize)
 		{
 		this.tileSize = tileSize;
-		BufferedImage tileset = ImageIO.read(file);
 		tileNumber = new Dimension((int)(tileset.getWidth()/tileSize.width), (int)(tileset.getHeight()/tileSize.height));
 		tiles = new BufferedImage[tileNumber.width*tileNumber.height];
 		int index = 0;

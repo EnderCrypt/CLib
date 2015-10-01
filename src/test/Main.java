@@ -15,7 +15,8 @@ public class Main
 	public static void main(String[] args)
 		{
 		CLib clib = new CLib("Test", new Dimension(50, 25));
-		File file = new File("src/com/github/EnderCrypt/CLib/curses_800x600.png");
+		File file = new File("Tilesets/curses_800x600.png");
+		//File file = new File("src/com/github/EnderCrypt/CLib/curses_800x600.png");
 		//File file = new File("src/com/github/EnderCrypt/CLib/cleanfont.png");
 		try
 			{

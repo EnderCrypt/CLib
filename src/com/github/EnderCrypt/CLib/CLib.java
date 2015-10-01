@@ -2,12 +2,16 @@ package com.github.EnderCrypt.CLib;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class CLib
@@ -33,9 +37,17 @@ public class CLib
 		clibPanel = new CLibPanel(this);
 		jframe.getContentPane().add(clibPanel);
 		}
+	public void loadInternalGraphics(File file, Dimension tileSize) throws IOException
+		{
+		//TODO: needs testing (loads from a tileset inside library jar)
+		Image tilesetImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/BLOCK.png"));
+		tileset = new CLibTileset((BufferedImage)tilesetImage, tileSize);
+		prepare();
+		}
 	public void loadGraphics(File file, Dimension tileSize) throws IOException
 		{
-		tileset = new CLibTileset(file, tileSize);
+		BufferedImage tilesetImage = ImageIO.read(file);
+		tileset = new CLibTileset(tilesetImage, tileSize);
 		prepare();
 		}
 	private void prepare()
