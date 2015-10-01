@@ -49,9 +49,10 @@ public class Main
 			public void run()
 				{
 				clib.println(counter+": "+(char)counter);
+				//clib.println(new int[]{counter,counter+1,counter+2,counter+3,counter+4,counter+5});
 				counter++;
 				clib.redraw();
 				}
-			}, 1000, 500);
+			}, 1000, 100);
 		}
 	}

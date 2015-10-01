@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 
@@ -120,6 +121,37 @@ public class CLib
 			tile.setBackground(backColorBrush);
 			}
 		}
+	public void put(int x, int y, int[] data)
+		{
+		put(x, y, data, false);
+		}
+	private void put(int x, int y, int[] data, boolean pushUpAllowed)
+		{
+		int draw_x = x;
+		int draw_y = y;
+		for (int i=0;i<data.length;i++)
+			{
+			char letter = (char) data[i];
+			if (letter == '\n')
+				{
+				draw_x = x;
+				draw_y++;
+				if (draw_y >= tileNumber.height)
+					{
+					println(Arrays.copyOfRange(data, i+1, data.length));
+					return;
+					}
+				}
+			else 
+				{
+				if (draw_x < tileNumber.width)
+					{
+					put(draw_x, draw_y, letter);
+					draw_x++;
+					}
+				}
+			}
+		}
 	public void put(int x, int y, String text)
 		{
 		put(x, y, text, false);
@@ -150,6 +182,21 @@ public class CLib
 					}
 				}
 			}
+		}
+	public void println(int[] data)
+		{
+		//shift
+		for (int y=0;y<tileNumber.height-1;y++)
+			{
+			screen[y] = screen[y+1];
+			}
+		screen[tileNumber.height-1] = new CLibTile[tileNumber.width];
+		for (int x=0;x<tileNumber.width;x++)
+			{
+			screen[tileNumber.height-1][x] = new CLibTile(tileset);
+			}
+		//println
+		put(0, tileNumber.height-1, data, true);
 		}
 	public void println(String text)
 		{
