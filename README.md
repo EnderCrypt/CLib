@@ -11,3 +11,4 @@ Features:
 - native mouse listener
 - ability to clear screen easily
 - ability to put text anywhere on screen
+- ability to color the text any color (16 mil colors)
