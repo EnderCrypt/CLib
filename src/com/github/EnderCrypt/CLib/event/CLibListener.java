@@ -1,39 +1,82 @@
 package com.github.EnderCrypt.CLib.event;
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CLibListener implements KeyListener, MouseListener
+import com.github.EnderCrypt.CLib.CLibPanel;
+
+public class CLibListener implements KeyListener, MouseListener, MouseMotionListener
 	{
+	public List<CLibMouselistener> mouseListeners = new ArrayList<>();
 	public List<CLibKeylistener> keyListeners = new ArrayList<>();
 	public List<Integer> keysPressed = new ArrayList<>();
-	public void add(MouseListener e)
+	private CLibPanel clibPanel;
+	private Dimension tileSize;
+	public Point mousePosition = new Point(0,0);
+	public Point mouseOffset = new Point(2, 3);
+	public Point tileMousePosition = new Point(-1,-1);
+	public CLibListener(CLibPanel clibPanel, Dimension tileSize)
 		{
-		
+		this.clibPanel = clibPanel;
+		this.tileSize = tileSize;
+		}
+	public void setMousePosition()
+		{
+		mousePosition = clibPanel.getMousePosition();
+		mousePosition.x -= mouseOffset.x;
+		mousePosition.y -= mouseOffset.y;
+		tileMousePosition.x = (int) Math.round(mousePosition.x/tileSize.width);
+		tileMousePosition.y = (int) Math.round(mousePosition.y/tileSize.height);
+		}
+	public void add(CLibMouselistener e)
+		{
+		mouseListeners.add(e);
 		}
 	public void add(CLibKeylistener e)
 		{
 		keyListeners.add(e);
 		}
+	// update
+	public void update()
+		{
+		final CLibKeyData keyData = new CLibKeyData(keysPressed);
+		for (CLibKeylistener keyListener:keyListeners)
+			{
+			keyListener.keyDown(keyData);
+			}
+		}
 	// MOUSE
 	@Override
 	public void mouseClicked(MouseEvent e)
 		{
-		System.out.println("mouseClicked");
+		
 		}
 	@Override
 	public void mousePressed(MouseEvent e)
 		{
-		System.out.println("mousePressed");
+		//activate mouseListeners
+		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
+		for (CLibMouselistener mouseListener:mouseListeners)
+			{
+			mouseListener.mousePressed(mouseData);
+			}
 		}
 	@Override
 	public void mouseReleased(MouseEvent e)
 		{
-		System.out.println("mouseReleased");
+		//activate mouseListeners
+		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
+		for (CLibMouselistener mouseListener:mouseListeners)
+			{
+			mouseListener.mouseReleased(mouseData);
+			}
 		}
 	@Override
 	public void mouseEntered(MouseEvent e)
@@ -64,10 +107,10 @@ public class CLibListener implements KeyListener, MouseListener
 				}
 			}
 		//activate keyListeners
-		CLibKeyData keyData = new CLibKeyData(e, keysPressed);
+		//CLibKeyData keyData = new CLibKeyData(e, keysPressed);
 		for (CLibKeylistener keyListener:keyListeners)
 			{
-			keyListener.keyPressed(keyData);
+			keyListener.keyPressed(e);
 			}
 		}
 	@Override
@@ -81,10 +124,32 @@ public class CLibListener implements KeyListener, MouseListener
 			keysPressed.remove(location);
 			}
 		//activate keyListeners
-		CLibKeyData keyData = new CLibKeyData(e, keysPressed);
+		//CLibKeyData keyData = new CLibKeyData(e, keysPressed);
 		for (CLibKeylistener keyListener:keyListeners)
 			{
-			keyListener.keyPressed(keyData);
+			keyListener.keyPressed(e);
+			}
+		}
+	@Override
+	public void mouseDragged(MouseEvent e)
+		{
+		setMousePosition();
+		//activate mouseListeners
+		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
+		for (CLibMouselistener mouseListener:mouseListeners)
+			{
+			mouseListener.mouseDragged(mouseData);
+			}
+		}
+	@Override
+	public void mouseMoved(MouseEvent e)
+		{
+		setMousePosition();
+		//activate mouseListeners
+		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
+		for (CLibMouselistener mouseListener:mouseListeners)
+			{
+			mouseListener.mouseMoved(mouseData);
 			}
 		}
 	}

@@ -7,10 +7,10 @@ import java.awt.Point;
 
 public class CLibTile
 	{
-	Color backgroundColor = Color.BLACK;
-	Color frontColor = Color.WHITE;
-	CLibTileset tileset;
-	int tileID;
+	public Color backgroundColor = Color.BLACK;
+	public Color frontColor = Color.WHITE;
+	private CLibTileset tileset;
+	public int tileID;
 	public CLibTile(CLibTileset tileset)
 		{
 		this.tileset = tileset;
@@ -43,5 +43,19 @@ public class CLibTile
 			Image tile = tileset.getTile(tileID, frontColor);
 			g2d.drawImage(tile, location.x, location.y, null);
 			}
+		}
+	public void drawInvertedColor(Graphics2D g2d, Point location)
+		{
+		g2d.setColor(invertColor(backgroundColor));
+		g2d.fillRect(location.x, location.y, tileset.tileSize.width, tileset.tileSize.height);
+		if (tileID > 0)
+			{
+			Image tile = tileset.getTile(tileID, invertColor(frontColor));
+			g2d.drawImage(tile, location.x, location.y, null);
+			}
+		}
+	Color invertColor(Color color) //http://stackoverflow.com/questions/4672271/reverse-opposing-colors
+		{
+		return new Color(0xFFFFFF - color.getRGB());
 		}
 	}

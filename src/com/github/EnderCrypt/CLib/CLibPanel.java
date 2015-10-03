@@ -11,14 +11,17 @@ import com.github.EnderCrypt.CLib.event.CLibListener;
 @SuppressWarnings("serial")
 public class CLibPanel extends JPanel
 	{
-	CLibListener cLibListener = new CLibListener();
+	CLibListener cLibListener;
 	CLib clib;
 	int paintMilli = 0;
+	boolean drawTileMousePointer;
 	public CLibPanel(CLib clib)
 		{
 		this.clib = clib;
+		cLibListener = new CLibListener(this, clib.tileset.tileSize);
 		addKeyListener(cLibListener);
 		addMouseListener(cLibListener);
+		addMouseMotionListener(cLibListener);
 		}
 	@Override
 	protected void paintComponent(Graphics g)
@@ -26,6 +29,7 @@ public class CLibPanel extends JPanel
 		super.paintComponent(g);
 		long milli = System.currentTimeMillis();
 		Graphics2D g2d = (Graphics2D) g;
+		// draw tiles
 		for (int y=0;y<clib.tileNumber.height;y++)
 			{
 			for (int x=0;x<clib.tileNumber.width;x++)
@@ -37,5 +41,15 @@ public class CLibPanel extends JPanel
 			}
 		paintMilli = (int) (System.currentTimeMillis()-milli);
 		//System.out.println("Paint took: "+paintMilli+" Milli");
+		//draw tile mouse pointer
+		if (drawTileMousePointer)
+			{
+			Point tileMouse = clib.getTileMousePosition();
+			if ((tileMouse.x >= 0) && (tileMouse.y >= 0))
+				{
+				Point mouse = new Point((tileMouse.x*clib.tileset.tileSize.width), (tileMouse.y*clib.tileset.tileSize.height));
+				clib.screen[tileMouse.y][tileMouse.x].drawInvertedColor(g2d, mouse);
+				}
+			}
 		}
 	}

@@ -3,19 +3,20 @@ package com.github.EnderCrypt.CLib;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.github.EnderCrypt.CLib.event.CLibKeylistener;
+import com.github.EnderCrypt.CLib.event.CLibMouselistener;
 
 public class CLib
 	{
@@ -36,9 +37,6 @@ public class CLib
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setResizable(false);
 		jframe.setBackground(defaultBackColorBrush);
-		// JPanel
-		clibPanel = new CLibPanel(this);
-		jframe.getContentPane().add(clibPanel);
 		}
 	public void loadInternalGraphics(File file, Dimension tileSize) throws IOException
 		{
@@ -53,13 +51,33 @@ public class CLib
 		tileset = new CLibTileset(tilesetImage, tileSize);
 		prepare();
 		}
+	public Point getMousePosition()
+		{
+		return clibPanel.cLibListener.mousePosition.getLocation();
+		}
+	public Point getTileMousePosition()
+		{
+		return clibPanel.cLibListener.tileMousePosition.getLocation();
+		}
 	private void prepare()
 		{
+		// JPanel
+		clibPanel = new CLibPanel(this);
+		jframe.getContentPane().add(clibPanel);
+		//screen
 		createScreen();
 		resize();
 		redraw();
 		jframe.setVisible(true);
 		clibPanel.requestFocus();
+		}
+	public void setMousePointer(boolean usePointer)
+		{
+		clibPanel.drawTileMousePointer = usePointer;
+		}
+	public void updateListeners()
+		{
+		clibPanel.cLibListener.update();
 		}
 	public void preloadTileset(Color color)
 		{
@@ -132,7 +150,23 @@ public class CLib
 			}
 		backColorBrush = color;
 		}
-	public void put(int x, int y, int tileID)
+	public Color getFrontColor(int x, int y)
+		{
+		return screen[y][x].frontColor;
+		}
+	public Color getBackColor(int x, int y)
+		{
+		return screen[y][x].backgroundColor;
+		}
+	public char getTileChar(int x, int y)
+		{
+		return (char) screen[y][x].tileID;
+		}
+	public CLibTile getTile(int x, int y)
+		{
+		return screen[y][x];
+		}
+	public int put(int x, int y, int tileID)
 		{
 		CLibTile tile = screen[y][x];
 		tile.setTile(tileID);
@@ -144,70 +178,49 @@ public class CLib
 			{
 			tile.setBackground(backColorBrush);
 			}
+		return x+1;
 		}
-	public void put(int x, int y, int[] data)
+	public int put(int x, int y, int[] data)
 		{
-		put(x, y, data, false);
+		return put(x, y, data, false);
 		}
-	private void put(int x, int y, int[] data, boolean pushUpAllowed)
+	private int put(int x, int y, int[] data, boolean pushUpAllowed)
 		{
 		int draw_x = x;
 		int draw_y = y;
 		for (int i=0;i<data.length;i++)
 			{
 			char letter = (char) data[i];
-			if (letter == '\n')
+			if (draw_x >= tileNumber.width)
 				{
-				draw_x = x;
-				draw_y++;
-				if (draw_y >= tileNumber.height)
-					{
-					println(Arrays.copyOfRange(data, i+1, data.length));
-					return;
-					}
+				return draw_x;
 				}
-			else 
-				{
-				if (draw_x < tileNumber.width)
-					{
-					put(draw_x, draw_y, letter);
-					draw_x++;
-					}
-				}
+			put(draw_x, draw_y, letter);
+			draw_x++;
 			}
+		return draw_x;
 		}
-	public void put(int x, int y, String text)
+	public int put(int x, int y, String text)
 		{
-		put(x, y, text, false);
+		return put(x, y, text, false);
 		}
-	private void put(int x, int y, String text, boolean pushUpAllowed)
+	private int put(int x, int y, String text, boolean pushUpAllowed)
 		{
 		int draw_x = x;
 		int draw_y = y;
 		for (int i=0;i<text.length();i++)
 			{
 			char letter = text.charAt(i);
-			if (letter == '\n')
+			if (draw_x >= tileNumber.width)
 				{
-				draw_x = x;
-				draw_y++;
-				if (draw_y >= tileNumber.height)
-					{
-					println(text.substring(i+1));
-					return;
-					}
+				return draw_x;
 				}
-			else 
-				{
-				if (draw_x < tileNumber.width)
-					{
-					put(draw_x, draw_y, letter);
-					draw_x++;
-					}
-				}
+			put(draw_x, draw_y, letter);
+			draw_x++;
 			}
+		return draw_x;
 		}
-	public void println(int[] data)
+	public int println(int[] data)
 		{
 		//shift
 		for (int y=0;y<tileNumber.height-1;y++)
@@ -220,9 +233,9 @@ public class CLib
 			screen[tileNumber.height-1][x] = new CLibTile(tileset);
 			}
 		//println
-		put(0, tileNumber.height-1, data, true);
+		return put(0, tileNumber.height-1, data, true);
 		}
-	public void println(String text)
+	public int println(String text)
 		{
 		//shift
 		for (int y=0;y<tileNumber.height-1;y++)
@@ -235,7 +248,7 @@ public class CLib
 			screen[tileNumber.height-1][x] = new CLibTile(tileset);
 			}
 		//println
-		put(0, tileNumber.height-1, text, true);
+		return put(0, tileNumber.height-1, text, true);
 		}
 	public void redraw()
 		{
@@ -248,10 +261,18 @@ public class CLib
 		}
 	public void addKeyListener(CLibKeylistener keyListener)
 		{
-		clibPanel.cLibListener.add(keyListener);
+		clibPanel.cLibListener.add(keyListener); 
 		}
-	public void addMouseListener(MouseListener mouseListener)
+	public void addMouseListener(CLibMouselistener mouseListener)
 		{
 		clibPanel.cLibListener.add(mouseListener);
+		}
+	public void addNativeKeyListener(KeyListener keyListener)
+		{
+		clibPanel.addKeyListener(keyListener);
+		}
+	public void addNativeMouseListener(MouseListener mouseListener)
+		{
+		clibPanel.addMouseListener(mouseListener);
 		}
 	}

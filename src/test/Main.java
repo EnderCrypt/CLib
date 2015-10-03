@@ -2,12 +2,18 @@ package test;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.github.EnderCrypt.CLib.CLib;
+import com.github.EnderCrypt.CLib.event.CLibKeyData;
+import com.github.EnderCrypt.CLib.event.CLibKeylistener;
+import com.github.EnderCrypt.CLib.event.CLibMouseData;
+import com.github.EnderCrypt.CLib.event.CLibMouselistener;
 
 public class Main
 	{
@@ -29,7 +35,7 @@ public class Main
 			e.printStackTrace();
 			System.exit(1);
 			}
-		
+		clib.setMousePointer(true);
 		clib.setFrontBrush(Color.RED);
 		clib.put(5, 3, "Welcome to the CLib demo "+(char)3);
 		
@@ -41,28 +47,75 @@ public class Main
 		
 		clib.redraw();
 		
+		clib.addMouseListener(new CLibMouselistener()
+			{
+			@Override
+			public void mouseReleased(CLibMouseData e)
+				{
+				
+				}
+			@Override
+			public void mousePressed(CLibMouseData e)
+				{
+				
+				}
+			@Override
+			public void mouseMoved(CLibMouseData mouseData)
+				{
+				
+				}
+			@Override
+			public void mouseDragged(CLibMouseData e)
+				{
+				clib.put(e.tile.x, e.tile.y, 'X');
+				}
+			});
+		clib.addKeyListener(new CLibKeylistener()
+			{
+			@Override
+			public void keyReleased(KeyEvent e)
+				{
+				
+				}
+			@Override
+			public void keyPressed(KeyEvent e)
+				{
+				
+				}
+			@Override
+			public void keyDown(CLibKeyData e)
+				{
+				List<Integer> keysDown = e.getKeysDown();
+				int pos = clib.put(0, 0, "Keys down: ");
+				for (int keyDown:keysDown)
+					{
+					pos = clib.put(pos+1, 0, String.valueOf(keyDown));
+					}
+				}
+			});
+		
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask()
 			{
 			@Override
 			public void run()
 				{
-				//clib.println(counter+": "+(char)counter);
-				//clib.println(new int[]{counter,counter+1,counter+2,counter+3,counter+4,counter+5});
-				//counter++;
-				clib.clearScreen();
+				clib.clearScreen(Color.BLACK);
+				}
+			}, 2000);
+		timer.schedule(new TimerTask()
+			{
+			@Override
+			public void run()
+				{
+				//clib.clearScreen(Color.BLACK);
 				clib.setFrontBrush(null);
-				clib.put(0, 0, "Keys down: "+clib.getKeysDebug().toString());
+				clib.updateListeners();
 				clib.put(0, 1, "Paint delta: "+clib.getPaintDelta()+" Milli");
 				clib.put(0, 2, "Cached images: "+clib.getCacheCount());
 				
 				clib.setFrontBrush(new Color((int)(Math.random()*(255*255*255))));
-				int[] data = new int[50];
-				for (int i=0;i<data.length-1;i++)
-					{
-					data[i] = (int)(Math.random()*255);
-					}
-				clib.put(0, 5, data);
+				clib.put(0, 5, (int)(Math.random()*255));
 				clib.redraw();
 				}
 			}, 2000, 50);

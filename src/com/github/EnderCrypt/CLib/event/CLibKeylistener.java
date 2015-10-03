@@ -4,9 +4,9 @@ import java.awt.event.KeyEvent;
 
 public interface CLibKeylistener
 	{
-	public void keyTyped(CLibKeyData e);
+	public void keyDown(CLibKeyData e);
 	
-	public void keyPressed(CLibKeyData e);
+	public void keyPressed(KeyEvent e);
 	
-	public void keyReleased(CLibKeyData e);
+	public void keyReleased(KeyEvent e);
 	}

@@ -1,25 +1,40 @@
 package com.github.EnderCrypt.CLib.event;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CLibKeyData
 	{
 	private final KeyEvent keyEvent;
-	public final int[] keysPressed;
+	private final List<Integer> keysDown;
+	CLibKeyData(List<Integer> keysDown)
+		{
+		this.keyEvent = null;
+		this.keysDown = keysDown;
+		}
 	CLibKeyData(KeyEvent keyEvent, List<Integer> keysDown)
 		{
 		this.keyEvent = keyEvent;
-		
-		int[] temp = new int[keysDown.size()];
-		for (int i=0;i<keysDown.size();i++)
-			{
-			temp[i] = keysDown.get(i);
-			}
-		keysPressed = temp;
+		this.keysDown = keysDown;
 		}
 	public KeyEvent getKeyEvent()
 		{
 		return keyEvent;
+		}
+	public List<Integer> getKeysDown()
+		{
+		return new ArrayList<Integer>(keysDown);//keysDown.toArray(new Integer[keysDown.size()]);
+		}
+	public boolean isKeyDown(int key)
+		{
+		for (int keyDown:keysDown)
+			{
+			if (keyDown == key)
+				{
+				return true;
+				}
+			}
+		return false;
 		}
 	}
