@@ -74,6 +74,12 @@ public class Main
 			@Override
 			public void mousePressed(CLibMouseData e)
 				{
+				if ((selected.x > -1) && (selected.y > -1))
+					{
+					Color color = colorBar[selected.y][selected.x];
+					clib.setFrontBrush(color);
+					clib.put(selected.x, selected.y+screenSize.height-colorHeight, icon);
+					}
 				if (e.tile.y >= (screenSize.height-colorHeight))
 					{
 					selected.x = e.tile.x;
@@ -81,6 +87,7 @@ public class Main
 					Color color = colorBar[selected.y][selected.x];
 					clib.setFrontBrush(color);
 					}
+				mouseDragged(e);
 				}
 			@Override
 			public void mouseMoved(CLibMouseData mouseData)
