@@ -17,7 +17,7 @@ public class Main
 	public static char icon = (char) 219;
 	public static char halfIcon = (char) 219-(16*2)-10;
 	public static boolean blink = true;
-	public static Point selected = new Point(0,0);
+	public static Point selected = new Point(0,0); // the currently selected color, position
 	public static char lineIcon = (char) 196;
 	public static int colorHeight = 2;
 	public static Dimension screenSize = new Dimension(50, 25);
@@ -116,6 +116,6 @@ public class Main
 					}
 				clib.redraw();
 				}
-			}, 500,500);
+			}, 100,100);
 		}
 	}

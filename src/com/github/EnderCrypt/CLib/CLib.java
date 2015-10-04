@@ -162,6 +162,10 @@ public class CLib
 		{
 		return screen[y][x].backgroundColor;
 		}
+	public int getTileCount()
+		{
+		return tileset.tiles.length;
+		}
 	public char getTileChar(int x, int y)
 		{
 		return (char) screen[y][x].tileID;
@@ -224,9 +228,8 @@ public class CLib
 			}
 		return draw_x;
 		}
-	public int println(int[] data)
+	public void shiftUp()
 		{
-		//shift
 		for (int y=0;y<tileNumber.height-1;y++)
 			{
 			screen[y] = screen[y+1];
@@ -236,6 +239,10 @@ public class CLib
 			{
 			screen[tileNumber.height-1][x] = new CLibTile(tileset);
 			}
+		}
+	public int println(int[] data)
+		{
+		shiftUp();
 		//println
 		return put(0, tileNumber.height-1, data, true);
 		}

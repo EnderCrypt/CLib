@@ -10,7 +10,6 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.EnderCrypt.CLib.CLib;
 import com.github.EnderCrypt.CLib.CLibPanel;
 
 public class CLibListener implements KeyListener, MouseListener, MouseMotionListener
@@ -18,18 +17,15 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 	public List<CLibMouselistener> mouseListeners = new ArrayList<>();
 	public List<CLibKeylistener> keyListeners = new ArrayList<>();
 	public List<Integer> keysPressed = new ArrayList<>();
-	private CLib clib;
 	private CLibPanel clibPanel;
 	private Dimension tileSize;
-	private Dimension tileNumber;
 	public Point mousePosition = new Point(0,0);
 	public Point mouseOffset = new Point(2, 3);
 	public Point tileMousePosition = new Point(-1,-1);
-	public CLibListener(CLibPanel clibPanel, Dimension tileSize, Dimension tileNumber)
+	public CLibListener(CLibPanel clibPanel, Dimension tileSize)
 		{
 		this.clibPanel = clibPanel;
 		this.tileSize = tileSize;
-		this.tileNumber = tileNumber;
 		}
 	public boolean setMousePosition()
 		{
@@ -136,7 +132,7 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 		//CLibKeyData keyData = new CLibKeyData(e, keysPressed);
 		for (CLibKeylistener keyListener:keyListeners)
 			{
-			keyListener.keyPressed(e);
+			keyListener.keyReleased(e);
 			}
 		}
 	@Override
