@@ -18,7 +18,7 @@ public class CLibPanel extends JPanel
 	public CLibPanel(CLib clib)
 		{
 		this.clib = clib;
-		cLibListener = new CLibListener(this, clib.tileset.tileSize);
+		cLibListener = new CLibListener(this, clib.tileset.tileSize, clib.tileNumber);
 		addKeyListener(cLibListener);
 		addMouseListener(cLibListener);
 		addMouseMotionListener(cLibListener);

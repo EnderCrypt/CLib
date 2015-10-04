@@ -51,6 +51,10 @@ public class CLib
 		tileset = new CLibTileset(tilesetImage, tileSize);
 		prepare();
 		}
+	public Dimension getScreenSize()
+		{
+		return tileNumber.getSize();
+		}
 	public Point getMousePosition()
 		{
 		return clibPanel.cLibListener.mousePosition.getLocation();

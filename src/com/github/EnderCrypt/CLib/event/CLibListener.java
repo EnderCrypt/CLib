@@ -10,6 +10,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.EnderCrypt.CLib.CLib;
 import com.github.EnderCrypt.CLib.CLibPanel;
 
 public class CLibListener implements KeyListener, MouseListener, MouseMotionListener
@@ -17,23 +18,31 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 	public List<CLibMouselistener> mouseListeners = new ArrayList<>();
 	public List<CLibKeylistener> keyListeners = new ArrayList<>();
 	public List<Integer> keysPressed = new ArrayList<>();
+	private CLib clib;
 	private CLibPanel clibPanel;
 	private Dimension tileSize;
+	private Dimension tileNumber;
 	public Point mousePosition = new Point(0,0);
 	public Point mouseOffset = new Point(2, 3);
 	public Point tileMousePosition = new Point(-1,-1);
-	public CLibListener(CLibPanel clibPanel, Dimension tileSize)
+	public CLibListener(CLibPanel clibPanel, Dimension tileSize, Dimension tileNumber)
 		{
 		this.clibPanel = clibPanel;
 		this.tileSize = tileSize;
+		this.tileNumber = tileNumber;
 		}
-	public void setMousePosition()
+	public boolean setMousePosition()
 		{
 		mousePosition = clibPanel.getMousePosition();
+		if (mousePosition == null)
+			{
+			return false;
+			}
 		mousePosition.x -= mouseOffset.x;
 		mousePosition.y -= mouseOffset.y;
 		tileMousePosition.x = (int) Math.round(mousePosition.x/tileSize.width);
 		tileMousePosition.y = (int) Math.round(mousePosition.y/tileSize.height);
+		return true;
 		}
 	public void add(CLibMouselistener e)
 		{
@@ -133,12 +142,14 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void mouseDragged(MouseEvent e)
 		{
-		setMousePosition();
+		if (setMousePosition())
+			{
 		//activate mouseListeners
 		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
-		for (CLibMouselistener mouseListener:mouseListeners)
-			{
-			mouseListener.mouseDragged(mouseData);
+			for (CLibMouselistener mouseListener:mouseListeners)
+				{
+				mouseListener.mouseDragged(mouseData);
+				}
 			}
 		}
 	@Override
