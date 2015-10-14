@@ -20,11 +20,11 @@ public class Main
 	public static Point selected = new Point(0,0); // the currently selected color, position
 	public static char lineIcon = (char) 196;
 	public static int colorHeight = 2;
-	public static Dimension screenSize = new Dimension(50, 25);
+	public static Dimension screenSize = new Dimension(100, 50);
 	public static Color[][] colorBar = new Color[colorHeight][screenSize.width];
 	public static void main(String[] args)
 		{
-		CLib clib = new CLib("Test", screenSize);
+		CLib clib = new CLib("Paint", screenSize);
 		File file = new File("Tilesets/curses_800x600.png");
 		try
 			{

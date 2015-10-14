@@ -27,9 +27,9 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 		this.clibPanel = clibPanel;
 		this.tileSize = tileSize;
 		}
-	public boolean setMousePosition()
+	public boolean setMousePosition(Point point)
 		{
-		mousePosition = clibPanel.getMousePosition();
+		mousePosition = point.getLocation();
 		if (mousePosition == null)
 			{
 			return false;
@@ -38,6 +38,7 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 		mousePosition.y -= mouseOffset.y;
 		tileMousePosition.x = (int) Math.round(mousePosition.x/tileSize.width);
 		tileMousePosition.y = (int) Math.round(mousePosition.y/tileSize.height);
+		System.out.println(mousePosition);
 		return true;
 		}
 	public void add(CLibMouselistener e)
@@ -138,20 +139,18 @@ public class CLibListener implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void mouseDragged(MouseEvent e)
 		{
-		if (setMousePosition())
-			{
+		setMousePosition(e.getPoint());
 		//activate mouseListeners
 		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
-			for (CLibMouselistener mouseListener:mouseListeners)
-				{
-				mouseListener.mouseDragged(mouseData);
-				}
+		for (CLibMouselistener mouseListener:mouseListeners)
+			{
+			mouseListener.mouseDragged(mouseData);
 			}
 		}
 	@Override
 	public void mouseMoved(MouseEvent e)
 		{
-		setMousePosition();
+		setMousePosition(e.getPoint());
 		//activate mouseListeners
 		final CLibMouseData mouseData = new CLibMouseData(e, tileMousePosition);
 		for (CLibMouselistener mouseListener:mouseListeners)
